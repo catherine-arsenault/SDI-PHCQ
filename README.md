@@ -1,6 +1,6 @@
 This repository contains statistical code in STATA format to create a multidimensional PHC quality index using World Bank Service Delivery Indicator (SDI) data. 
 
-*BT_crPHCQ_structure
+* BT_crPHCQ_structure
   Creates the structural quality index.
 
 * BT_crPHCQ_process_vig
@@ -9,7 +9,7 @@ This repository contains statistical code in STATA format to create a multidimen
 * BT_crPHCQ_process_ux
   Creates the user experience score.
 
-*BT_crPHCQ_overall
+* BT_crPHCQ_overall
   Creates the facility-level multidimensional PHC Quality index.
 
 * BT_anPHCQ
