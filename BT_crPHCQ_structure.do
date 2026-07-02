@@ -2,35 +2,26 @@
 * 			World Bank Service Delivery Indicator (SDI) Surveys				   *
 *				Primary Health Care (PHC) Quality Index	- BHUTAN			   *
 *																			   *
-* This dofile creates indices of structural quality using data from			   *
-* the SDI surveys. Indices were based on guidance from the WHO 				   *
+* This dofile creates indices of structural quality for sentinel PHC services  *
+* using data from the SDI surveys. Indices were based on guidance from the WHO *
 * SARA service-specific readiness indices and WHO HHFA. 					   *
 *																			   *
 * Created by Catherine Arsenault and Sindhu Ravishankar
 * June 26, 2025																   *
 *------------------------------------------------------------------------------*
-* Notes: Ensure all indicators are binary (available=1, not available=0) and 
-* recode as necessary. For equipment, diagnostics, medicine, and commodities 
-* indicators, most include one indicator indicating availability and another 
-* indicating that it is functioning (or not expired in case of medicine) – 
-* create a new variable that indicates available AND functioning. For staff 
-* training code as no=0 and yes=1 if at least one provider has been trained. 
-* For guidelines if there are separate indicators for guideline availability 
-* and whether the guideline is current, combine the two into a new indicator.
-*  If >5% observations are missing, recode missing as not available. 
-*------------------------------------------------------------------------------*
 
 * Use the SDI Facility-level dataset
 	use "$user/$rawdata/Bhutan/surveydata/finaldata/Facility_Final.dta", clear
-
+*------------------------------------------------------------------------------*
 * Replace Missing to 0 for services not provided
 foreach v in ///
 S9R1_q4services20  S9R1_q4services19  S9R1_q4services31 S9R1_q4services30 ///
 S9R1_q4services3 S9R1_q4services10 S9R1_q4services17 S9R1_q4services24 ///
-S9R1_q4services23 {
+S9R1_q4services23 S7A_q28funcelectricity S7A_q56roomaudioveri S7A_q58roomvisualveri S7A_q39improvedtoilet S7A_q51watersoap5mt S7A_q52watersoapveri S9R1_q4services1 S9R1_q4services18 {
 			replace `v'=0 if `v'>=.	
 
 			}	
+	
 *------------------------------------------------------------------------------*
 * General Readiness Amenities Index
 
@@ -349,4 +340,41 @@ S9R1_q4services23 {
 	lab var phc_sri "Average service readiness"
 	
 	save "$user/$analysis/Bhutan_facility.dta", replace
+	
+/*
+*missing data check 
+
+*General Readiness Amenities 
+tab1 S7A_q27electricity S7A_q28funcelectricity S7A_q33watersource S7A_q35wateravail S7A_q56roomaudioveri S7A_q58roomvisualveri S7A_q39improvedtoilet S7A_q5telephone S7A_q6functionaltele S7A_q7mobilephone S7A_q8funmobile S7A_q9smartphone S7A_q10funsmartphone S7A_q13radio S7A_q14functionalradio S7A_q15computer S7A_q16funccomputer S7A_q19internet S7A_q20funcinternet S7A_q77vechstationed S7A_q78funcvehicle S7A_q79vehiclefuel S7A_q80ambudriver,m
+
+* General Readiness Infection Prevention Index		
+
+tab1 S7B_q4sharpsveri S7B_q6infecveri S11E_q1infection5 S11A_q1opd6 S7A_q51watersoap5mt S7A_q51watersoap5mt S7A_q52watersoapveri S11E_q1infection13 S8A_q7ipcguidelines, m
+
+*------------------------------------------------------------------------------*	
+* ANC Service Readiness Index
+	
+tab1 S10R1_q1available5 S9R1_q4services10 S11B_q1mch13 S11B_q3function13 S11D_q1lab20 S11D_q3function20 S11D_q1lab19 avai_S12A_q1available17 avai_S12A_q1available19 avai_S12B_q1available2, m  
+ 
+**-------------------------------------------------------------------------------------*
+* Child Health Services Service Readiness Index
+
+tab1 S10R1_q1available27 S9R1_q4services3 S9R1_q4services1 S11B_q1mch1 S11B_q3function1 S11B_q1mch2 S11B_q3function2 S11B_q1mch4 S11B_q3function4 S11B_q1mch5 S11B_q3function5 S11B_q1mch6 S11B_q3function6 S11B_q1mch12 S11B_q3function12 S11D_q1lab3 S11D_q3function3 S11D_q1lab4 S11D_q3function4 avai_S12A_q1available30 avai_S12A_q1available1 avai_S12A_q1available36 avai_S12A_q1available33 avai_S12A_q1available31 avai_S12A_q1available32 avai_S12A_q1available3 avai_S12A_q1available4, m 
+		
+*------------------------------------------------------------------------------*	
+* Tuberculosis Service Readiness Index
+tab1 S10R1_q1available9 S9R1_q4services30 S9R1_q4services31 S9R3_q1services22 S11D_q1lab11 avai_S12A_q1available15, m 
+*------------------------------------------------------------------------------*	
+* Diabetes Service Readiness Index
+
+tab1 S10R1_q1available26 S9R1_q4services19 S9R1_q4services20 S11B_q1mch11 S11B_q3function11 S11D_q1lab14 S11D_q3function14 S11D_q1lab15 avai_S12A_q1available25 avai_S12A_q1available20 avai_S12A_q1available17, m
+
+*------------------------------------------------------------------------------*	
+* CVD Service Readiness Index
+tab1 S9R1_q4services17 S9R1_q4services18 S11A_q1opd19 S11A_q3function19 S11A_q1opd18 S11A_q1opd20 avai_S12A_q1available14 avai_S12A_q1available22 avai_S12A_q1available8 avai_S12A_q1available2 avai_S12A_q1available7, m
+
+*------------------------------------------------------------------------------*	
+* Mental Health Service Readiness Index **Note for Catherine - need provider to cross check meds 
+
+tab1 S9R1_q4services23 S9R1_q4services24 avai_S12A_q1available18 avai_S12A_q1available21 avai_S12A_q1available11, m		
 	
